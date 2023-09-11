@@ -1,7 +1,9 @@
 import streamlit as st
 from question import *
 from exercise import *
+import logging
 
+logging.basicConfig(level=logging.INFO)
 
 st.set_page_config(page_title="Coding Room",
                    page_icon="📚",
@@ -47,6 +49,7 @@ if st.sidebar.button(label="Generate"):
     exercise_generate_prompt = f"Generate python coding exercise according to above format, under the context of {context}. The problem statement must contains the {context} keywords."
     response = exercise_llm_chain(exercise_generate_prompt)
 
+    logging.info(response)
     if 'text' in response:
         exercise_dict = parse_response(response['text'], exercise_parser, llm, exercise_generate_prompt)
     else:
@@ -58,7 +61,7 @@ if st.sidebar.button(label="Generate"):
         explanation_llm_chain = get_llm_chain(llm, explanation_prompt, None)
         explanation_generate_prompt = f"Generate explanation for the above code"
         explanation_response = explanation_llm_chain(explanation_generate_prompt)
-
+        logging.info(explanation_response)
 
     st.subheader("AI-generated Programming Exercise")
 

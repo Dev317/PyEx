@@ -31,7 +31,7 @@ def get_llm(model_path: str):
     #     top_k=2
     # )
 
-    llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.65)
+    llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.8)
     return llm
 
 def create_code_explanation_prompt(generated_question,
@@ -88,8 +88,7 @@ def get_llm_chain(llm,
                                 input_variables=["question"])
 
     llm_chain = LLMChain(llm=llm,
-                         prompt=prompt,
-                         verbose=True)
+                         prompt=prompt)
     return llm_chain
 
 def parse_response(response, parser, llm, prompt_value):
