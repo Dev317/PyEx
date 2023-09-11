@@ -31,8 +31,8 @@ context = st.sidebar.text_input(label='New Question Context',
 
 num_ref_exercises = st.sidebar.slider(label='No. Reference Exercises',
                                       help="Number of similar topic exercises to refer to",
-                                      min_value=3,
-                                      max_value=6,
+                                      min_value=1,
+                                      max_value=4,
                                       step=1)
 
 if st.sidebar.button(label="Generate"):
