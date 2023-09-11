@@ -15,7 +15,7 @@ st.title("🤖 PyEx")
 st.info("AI-powered exercise generation that accelerates your programming journey! 🚀")
 st.divider()
 
-st.sidebar.header("Please select the type of exercises")
+st.sidebar.header("Exercise Generator")
 
 language = st.sidebar.selectbox(label='Programming Language',
                                 options=['python'])
