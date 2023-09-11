@@ -24,12 +24,14 @@ difficulty = st.sidebar.selectbox(label='Difficulty',
 topic = st.sidebar.selectbox(label='Programming Topic',
                              options=get_topics())
 
-context = st.sidebar.text_input(label='New context')
+context = st.sidebar.text_input(label='New Question Context',
+                                help="The context in which the question is asked")
 
-num_ref_exercises = st.sidebar.slider(label='Number of reference exercises',
-                            min_value=3,
-                            max_value=10,
-                            step=1)
+num_ref_exercises = st.sidebar.slider(label='No. Reference Exercises',
+                                      help="Number of similar topic exercises to refer to",
+                                      min_value=3,
+                                      max_value=6,
+                                      step=1)
 
 if st.sidebar.button(label="Generate"):
     dataset_path = generate_sample_question(language=language,
