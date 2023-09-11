@@ -10,7 +10,7 @@ st.set_page_config(page_title="Coding Room",
                    menu_items=None)
 
 st.title("🤖 PyEx")
-st.info("AI-powered exercise generation that accelerates your programming! 🚀")
+st.info("AI-powered exercise generation that accelerates your programming journey! 🚀")
 st.divider()
 
 st.sidebar.header("Please select the type of exercises")
