@@ -44,7 +44,7 @@ if st.sidebar.button(label="Generate"):
     llm = get_llm(model_path=model_path)
     exercise_parser = get_parser(Exercise)
     exercise_llm_chain = get_llm_chain(llm, prompt, exercise_parser)
-    exercise_generate_prompt = f"Generate python coding exercise according to above format, under the context of {context}"
+    exercise_generate_prompt = f"Generate python coding exercise according to above format, under the context of {context}. The problem statement must contains the {context} keywords."
     response = exercise_llm_chain(exercise_generate_prompt)
 
     if 'text' in response:
