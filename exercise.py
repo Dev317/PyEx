@@ -31,7 +31,7 @@ def get_llm(model_path: str, tag: str = 'test-run'):
     #     top_k=2
     # )
 
-    llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.8, tags=[tag])
+    llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.7, tags=[tag])
     return llm
 
 def create_code_explanation_prompt(generated_question,
