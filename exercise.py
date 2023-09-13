@@ -66,6 +66,7 @@ def create_exercise_prompt(sample_questions,
                                       solution=val['answer'])
 
     result_prompt += f"\"\"\"Exercise {num_questions+1}"
+    result_prompt = result_prompt.replace("{", "(").replace("}", ")")
     return result_prompt
 
 def get_llm_chain(llm,
