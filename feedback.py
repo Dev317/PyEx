@@ -1,3 +1,4 @@
+import os
 from langsmith import Client
 from pprint import pprint
 import logging
@@ -7,7 +8,8 @@ def send_comment(run_id,
                  comment,
                  score,
                  correction):
-    client = Client()
+    client = Client(api_url=os.environ['LANGCHAIN_ENDPOINT'],
+                    api_key=os.environ['LANGCHAIN_API_KEY'])
     feedback = client.create_feedback(
         run_id=run_id,
         key="left_comment",
