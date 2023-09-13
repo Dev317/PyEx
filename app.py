@@ -194,4 +194,4 @@ if generate_btn or 'feedback_state' in st.session_state:
 
     except Exception as ex:
         logging.info(str(ex))
-        st.warning(body='Please generate again', icon='🚨')
+        st.warning(body='Please try again', icon='🚨')
