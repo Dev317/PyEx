@@ -18,7 +18,7 @@ st.set_page_config(page_title="Coding Room",
 def get_exercise(prompt):
 
     exercise_parser = get_parser(Exercise)
-    exercise_llm_chain = get_llm_chain(llm, prompt, exercise_parser, tag='test-run')
+    exercise_llm_chain = get_llm_chain(llm, prompt, exercise_parser, tag=os.getenv('ENV_TAG', 'test-run'))
     exercise_generate_prompt = f"Generate python coding exercise according to above format, under the context of {context}. The problem statement must contains the {context} keywords."
     exercise_generate_metadata = {
                                     "metadata": {
@@ -43,7 +43,7 @@ def get_exercise(prompt):
 def get_explanation(exercise_dict):
     explanation_prompt = create_code_explanation_prompt(generated_question=exercise_dict['problem_statement'],
                                                             code=exercise_dict['solution'])
-    explanation_llm_chain = get_llm_chain(llm, explanation_prompt, None, tag='test-run')
+    explanation_llm_chain = get_llm_chain(llm, explanation_prompt, None, tag=os.getenv('ENV_TAG', 'test-run'))
     explanation_generate_prompt = f"Generate explanation for the above code"
     explanation_generate_metadata = {
                                         "metadata": {
@@ -100,7 +100,7 @@ if generate_btn or 'feedback_state' in st.session_state:
     model_path = f"{os.getcwd()}/llama.cpp/models/7b/ggml-model-q4_0.bin"
     llm = get_llm(model_path=model_path, tag="test-run")
     # exercise_parser = get_parser(Exercise)
-    # exercise_llm_chain = get_llm_chain(llm, prompt, exercise_parser, tag='test-run')
+    # exercise_llm_chain = get_llm_chain(llm, prompt, exercise_parser, tag=os.getenv('ENV_TAG', 'test-run'))
     # exercise_generate_prompt = f"Generate python coding exercise according to above format, under the context of {context}. The problem statement must contains the {context} keywords."
     # exercise_generate_metadata = {
     #                                 "metadata": {
@@ -124,7 +124,7 @@ if generate_btn or 'feedback_state' in st.session_state:
     if exercise_dict:
         # explanation_prompt = create_code_explanation_prompt(generated_question=exercise_dict['problem_statement'],
         #                                                     code=exercise_dict['solution'])
-        # explanation_llm_chain = get_llm_chain(llm, explanation_prompt, None, tag='test-run')
+        # explanation_llm_chain = get_llm_chain(llm, explanation_prompt, None, tag=os.getenv('ENV_TAG', 'test-run'))
         # explanation_generate_prompt = f"Generate explanation for the above code"
         # explanation_generate_metadata = {
         #                                     "metadata": {
