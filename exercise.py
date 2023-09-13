@@ -21,7 +21,7 @@ class Exercise(BaseModel):
 def get_parser(object):
     return PydanticOutputParser(pydantic_object=object)
 
-def get_llm(model_path: str):
+def get_llm(model_path: str, tag: str = 'test-run'):
     # llm = LlamaCpp(
     #     model_path=model_path,
     #     n_gpu_layers=20000,
@@ -31,7 +31,7 @@ def get_llm(model_path: str):
     #     top_k=2
     # )
 
-    llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.8)
+    llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.65, tags=[tag])
     return llm
 
 def create_code_explanation_prompt(generated_question,
@@ -70,7 +70,8 @@ def create_exercise_prompt(sample_questions,
 
 def get_llm_chain(llm,
                   template,
-                  parser=None):
+                  parser=None,
+                  tag='test-run'):
 
 
     if parser:
@@ -78,17 +79,18 @@ def get_llm_chain(llm,
         {question}
         """
         prompt = PromptTemplate(template=template,
-                                input_variables=["question"],
+                                input_variables=['question'],
                                 partial_variables={"format_instructions": parser.get_format_instructions()}
         )
     else:
         template += """{question}
         """
         prompt = PromptTemplate(template=template,
-                                input_variables=["question"])
+                                input_variables=['question'])
 
     llm_chain = LLMChain(llm=llm,
-                         prompt=prompt)
+                         prompt=prompt,
+                         tags=[tag])
     return llm_chain
 
 def parse_response(response, parser, llm, prompt_value):

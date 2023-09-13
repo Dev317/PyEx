@@ -44,7 +44,7 @@ Jinja2==3.1.2
 jsonschema==4.19.0
 jsonschema-specifications==2023.7.1
 kiwisolver==1.4.5
-langchain==0.0.285
+langchain==0.0.288
 langsmith==0.0.35
 llama-cpp-python==0.1.84
 lxml==4.9.3
