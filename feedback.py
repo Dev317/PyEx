@@ -8,9 +8,7 @@ def send_comment(run_id,
                  comment,
                  score,
                  correction):
-    logging.info(os.environ['LANGCHAIN_ENDPOINT'])
-    logging.info(os.environ['LANGCHAIN_API_KEY'])
-    client = Client(api_url=os.environ['LANGCHAIN_ENDPOINT'],
+    client = Client(api_url="https://api.smith.langchain.com",
                     api_key=os.environ['LANGCHAIN_API_KEY'])
     feedback = client.create_feedback(
         run_id=run_id,

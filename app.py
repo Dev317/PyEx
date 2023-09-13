@@ -7,6 +7,8 @@ from langchain import callbacks
 
 logging.basicConfig(level=logging.INFO)
 
+os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
+
 st.set_page_config(page_title="Coding Room",
                    page_icon="📚",
                    layout="wide",
