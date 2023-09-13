@@ -95,6 +95,7 @@ if generate_btn or 'feedback_state' in st.session_state:
     sample_questions = select_random_n_questions(dataset_path=dataset_path, n=num_ref_exercises)
     prompt = create_exercise_prompt(sample_questions=sample_questions,
                                     topic=topic)
+    logging.info(prompt)
     model_path = f"{os.getcwd()}/llama.cpp/models/7b/ggml-model-q4_0.bin"
     llm = get_llm(model_path=model_path, tag="test-run")
     # exercise_parser = get_parser(Exercise)
