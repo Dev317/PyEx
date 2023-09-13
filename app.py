@@ -15,11 +15,9 @@ st.set_page_config(page_title="Coding Room",
 
 
 @st.cache_data(show_spinner="Generating exercise ...")
-def get_exercise(prompt):
+def get_exercise(_exercise_parser, _exercise_llm_chain):
 
-    exercise_parser = get_parser(Exercise)
-    exercise_llm_chain = get_llm_chain(llm, prompt, exercise_parser, tag=os.getenv('ENV_TAG', 'test-run'))
-    exercise_generate_prompt = f"Generate python coding exercise according to above format, under the context of {context}. The problem statement must contains the {context} keywords."
+    exercise_generate_prompt = f"Generate python coding exercise according to above format, under the context of {context}. The problem statement must contain the {context} keywords."
     exercise_generate_metadata = {
                                     "metadata": {
                                         "type": "exercise_generator"
@@ -27,15 +25,15 @@ def get_exercise(prompt):
                                  }
 
     with callbacks.collect_runs() as cb:
-        exercise_generate_response = exercise_llm_chain.invoke({"question": exercise_generate_prompt}, exercise_generate_metadata)
+        exercise_generate_response = _exercise_llm_chain.invoke({"question": exercise_generate_prompt}, exercise_generate_metadata)
         exercise_chain_run_id = cb.traced_runs[-1].id
         logging.info(exercise_chain_run_id)
 
     logging.info(exercise_generate_response)
     if 'text' in exercise_generate_response:
-        exercise_dict = parse_response(exercise_generate_response['text'], exercise_parser, llm, exercise_generate_prompt)
+        exercise_dict = parse_response(exercise_generate_response['text'], _exercise_parser, llm, exercise_generate_prompt)
     else:
-        exercise_dict = parse_response(exercise_generate_response, exercise_parser, llm, exercise_generate_prompt)
+        exercise_dict = parse_response(exercise_generate_response, _exercise_parser, llm, exercise_generate_prompt)
 
     return exercise_dict, exercise_chain_run_id
 
@@ -119,7 +117,10 @@ if generate_btn or 'feedback_state' in st.session_state:
     #     exercise_dict = parse_response(exercise_generate_response['text'], exercise_parser, llm, exercise_generate_prompt)
     # else:
     #     exercise_dict = parse_response(exercise_generate_response, exercise_parser, llm, exercise_generate_prompt)
-    exercise_dict, exercise_chain_run_id = get_exercise(prompt)
+
+    exercise_parser = get_parser(Exercise)
+    exercise_llm_chain = get_llm_chain(llm, prompt, exercise_parser, tag=os.getenv('ENV_TAG', 'test-run'))
+    exercise_dict, exercise_chain_run_id = get_exercise(exercise_parser, exercise_llm_chain)
 
     if exercise_dict:
         # explanation_prompt = create_code_explanation_prompt(generated_question=exercise_dict['problem_statement'],
