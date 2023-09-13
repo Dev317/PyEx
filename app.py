@@ -182,15 +182,17 @@ if generate_btn or 'feedback_state' in st.session_state:
                 explanation_correction = st.text_input(label='Additional correction on the explanation response')
 
                 if st.button(label="Submit"):
-                    send_comment(run_id=exercise_chain_run_id,
-                                comment=exercise_comment,
-                                score=exercise_accuracy_score,
-                                correction={"additional_correction": exercise_correction})
+                    if os.environ['ENV_TAG'] == 'test-run':
 
-                    send_comment(run_id=explanation_chain_run_id,
-                                comment=explanation_comment,
-                                score=explanation_accuracy_score,
-                                correction={"additional_correction": explanation_correction})
+                        send_comment(run_id=exercise_chain_run_id,
+                                    comment=exercise_comment,
+                                    score=exercise_accuracy_score,
+                                    correction={"additional_correction": exercise_correction})
+
+                        send_comment(run_id=explanation_chain_run_id,
+                                    comment=explanation_comment,
+                                    score=explanation_accuracy_score,
+                                    correction={"additional_correction": explanation_correction})
 
                     st.toast(body='Thank you for your input!', icon='✅')
 
