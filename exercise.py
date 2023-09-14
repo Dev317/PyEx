@@ -31,7 +31,7 @@ def get_llm(model_path: str, tag: str = 'test-run'):
     #     top_k=2
     # )
 
-    llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.7, tags=[tag])
+    llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.8, tags=[tag])
     return llm
 
 def create_code_explanation_prompt(generated_question,
@@ -95,7 +95,6 @@ def get_llm_chain(llm,
     return llm_chain
 
 def parse_response(response, parser, llm, prompt_value):
-    pprint(response)
     while True:
         try:
             generated_exercise = json.loads(response)
@@ -105,9 +104,6 @@ def parse_response(response, parser, llm, prompt_value):
                 parser=parser, llm=llm
             )
             return retry_parser.parse_with_prompt(response, prompt_value)
-
-
-
 
 
 # if __name__ == "__main__":
