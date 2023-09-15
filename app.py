@@ -133,7 +133,7 @@ if generate_btn or "feedback_state" in st.session_state:
         st.subheader(body="AI-generated Programming Exercise",
                     divider="rainbow")
 
-        with st.expander(exercise_dict['title']):
+        with st.expander(exercise_dict['title'], expanded=True):
             problem_statement_tab, explanation_tab, feedback_tab = st.tabs(['❓ Problem Statement', '💡 Code Hint Explanation', '❤️ Feedback'])
             with problem_statement_tab:
                 st.markdown(body=exercise_dict['problem_statement'])
