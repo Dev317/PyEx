@@ -21,17 +21,12 @@ class Exercise(BaseModel):
 def get_parser(object):
     return PydanticOutputParser(pydantic_object=object)
 
-def get_llm(model_path: str, tag: str = 'test-run'):
-    # llm = LlamaCpp(
-    #     model_path=model_path,
-    #     n_gpu_layers=20000,
-    #     n_batch=512,
-    #     n_ctx=3000,
-    #     f16_kv=True,
-    #     top_k=2
-    # )
-
-    llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.8, tags=[tag])
+def get_llm(model: str = "gpt-3.5-turbo",
+            temperature: float = 0.8,
+            tag: str = "test-run"):
+    llm = ChatOpenAI(model=model,
+                     temperature=temperature,
+                     tags=[tag])
     return llm
 
 def create_code_explanation_prompt(generated_question,
