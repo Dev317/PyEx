@@ -146,8 +146,7 @@ if generate_btn or "feedback_state" in st.session_state:
                 code_snippet = st_ace(theme="clouds_midnight",
                                       language="python",
                                       wrap=True,
-                                      value=function_def,
-                                      auto_update=True)
+                                      value=function_def)
                 st.warning("❗ Please regenerate a new question if the similarity cannot be conducted")
 
                 if st.button(label="Similarity check"):
@@ -168,8 +167,6 @@ if generate_btn or "feedback_state" in st.session_state:
                                 value=0.5,
                                 help="0.0 is the least accurate and 1.0 is the most accurate")
                 exercise_correction = st.text_input(label="Additional correction on the exercise generation")
-
-
                 explanation_comment = st.text_input(label="Comments on the code explanation")
                 explanation_accuracy_score = st.slider(label="Accuracy score on the explanation",
                                 min_value=0.0,
