@@ -19,9 +19,9 @@ st.set_page_config(page_title="Coding Room",
 
 
 @st.cache_data(ttl=3000, show_spinner="Generating exercise ...")
-def get_exercise(_exercise_parser, _exercise_llm_chain, _llm):
+def get_exercise(language, _exercise_parser, _exercise_llm_chain, _llm):
 
-    exercise_generate_prompt = f"Generate python coding exercise according to above format, under the context of {context}. The problem statement must contain the {context} keywords."
+    exercise_generate_prompt = f"Generate a {language} coding exercise according to above format, under the context of {context}. The problem statement content MUST have the {context} topic."
     exercise_generate_metadata = {
                                     "metadata": {
                                         "type": "exercise_generator"
@@ -81,15 +81,16 @@ context = st.sidebar.text_input(label="New Question Keyword Context",
 
 num_ref_exercises = st.sidebar.slider(label="No. Reference Exercises",
                                       help="Number of similar topic exercises to refer to",
-                                      min_value=1,
-                                      max_value=4,
+                                      min_value=2,
+                                      max_value=5,
+                                      value=3,
                                       step=1)
 
 temperature = st.sidebar.slider(label="LLM temperature",
-                               min_value=0.1,
-                               max_value=0.9,
+                               min_value=0.7,
+                               max_value=0.99,
                                value=0.8,
-                               step=0.1)
+                               step=0.01)
 
 gpt_model = st.sidebar.selectbox(label="GPT model",
                                  options=['gpt-3.5-turbo', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo-0613', 'gpt-3.5-turbo-16k-0613'])
@@ -121,11 +122,12 @@ if generate_btn or "feedback_state" in st.session_state:
                                                 difficulty=difficulty,
                                                 topic=topic)
         sample_questions = select_random_n_questions(dataset_path=dataset_path, n=num_ref_exercises)
-        prompt = create_exercise_prompt(sample_questions=sample_questions,
-                                        topic=topic)
+        prompt = create_exercise_prompt(language,
+                                        sample_questions=sample_questions,
+                                        topic=topic + "," + context)
         exercise_parser = get_parser(Exercise)
         exercise_llm_chain = get_llm_chain(llm, prompt, exercise_parser, tag=os.getenv('ENV_TAG', 'test-run'))
-        exercise_dict, exercise_chain_run_id = get_exercise(exercise_parser, exercise_llm_chain, llm)
+        exercise_dict, exercise_chain_run_id = get_exercise(language, exercise_parser, exercise_llm_chain, llm)
 
         if exercise_dict:
             explanation_response, explanation_chain_run_id = get_explanation(exercise_dict, llm)
@@ -147,11 +149,15 @@ if generate_btn or "feedback_state" in st.session_state:
                                       language="python",
                                       wrap=True,
                                       value=function_def)
-                st.warning("❗ Please regenerate a new question if the similarity cannot be conducted")
 
-                if st.button(label="Similarity check"):
-                    percentage_sim = similarity_check(exercise_dict['solution'], code_snippet)
-                    st.info(f"Similarity with hinted solution: {percentage_sim * 100}%")
+                st.warning("❗ Remember to 'Apply' to save your code and check your syntax. Failing to 'Apply' will cause the similarity checker to fail to process")
+
+                try:
+                    if st.button(label="Similarity check"):
+                        percentage_sim = similarity_check(exercise_dict['solution'], code_snippet)
+                        st.info(f"Similarity with hinted solution: {percentage_sim * 100}%")
+                except Exception as ex:
+                    st.toast(f"Error: {str(ex)} ", icon="❗")
 
             with explanation_tab:
                 st.code(body=exercise_dict['solution'], language="markdown")

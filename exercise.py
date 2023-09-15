@@ -38,10 +38,11 @@ Given the following code that addressed the above problem statement:
 """
 
 
-def create_exercise_prompt(sample_questions,
+def create_exercise_prompt(language,
+                           sample_questions,
                            topic):
     prime = """\"\"\"Exercise {num}
----Topic---
+---Keywords---
 {topic}
 ---Title--
 {title}
@@ -58,7 +59,7 @@ def create_exercise_prompt(sample_questions,
                                       topic=topic,
                                       title=val['title'],
                                       content=val['question'],
-                                      solution=val['answer'])
+                                      solution=val['answer'].replace(language, ""))
 
     result_prompt += f"\"\"\"Exercise {num_questions+1}"
     result_prompt = result_prompt.replace("{", "(").replace("}", ")")
