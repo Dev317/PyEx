@@ -72,6 +72,7 @@ posthog==3.0.2
 protobuf==4.24.3
 pulsar-client==3.3.0
 pyarrow==13.0.0
+pycode-similar==1.4
 pydantic==1.10.12
 pydantic_core==2.6.3
 pydeck==0.8.0
@@ -98,8 +99,10 @@ SQLAlchemy==2.0.20
 st-annotated-text==4.0.1
 starlette==0.27.0
 streamlit==1.26.0
+streamlit-ace==0.1.1
 streamlit-camera-input-live==0.2.0
 streamlit-card==0.0.61
+streamlit-code-editor==0.1.10
 streamlit-embedcode==0.1.2
 streamlit-extras==0.3.2
 streamlit-faker==0.0.2
@@ -126,3 +129,4 @@ watchfiles==0.20.0
 websockets==11.0.3
 yarl==1.9.2
 zipp==3.16.2
+zss==1.2.0
