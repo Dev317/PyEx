@@ -148,6 +148,7 @@ if generate_btn or "feedback_state" in st.session_state:
                                       wrap=True,
                                       value=function_def,
                                       auto_update=True)
+                st.warning("❗ Please regenerate a new question if the similarity cannot be conducted")
 
                 if st.button(label="Similarity check"):
                     percentage_sim = similarity_check(exercise_dict['solution'], code_snippet)
