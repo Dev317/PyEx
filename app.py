@@ -27,7 +27,7 @@ st.set_page_config(page_title="Coding Room",
 def get_exercise(language: str,
                  _exercise_parser: PydanticOutputParser,
                  _exercise_llm_chain: LLMChain,
-                 _llm: BaseLLM) -> Tuple(Dict, str):
+                 _llm: BaseLLM) -> Tuple[Dict, str]:
 
     exercise_generate_prompt = f"Generate a {language} coding exercise according to above format, under the context of {context}. The problem statement content MUST have the {context} topic."
     exercise_generate_metadata = {
@@ -50,7 +50,7 @@ def get_exercise(language: str,
     return exercise_dict, exercise_chain_run_id
 
 @st.cache_data(ttl=3000, show_spinner="Please hang tight ...")
-def get_explanation(exercise_dict: Dict, _llm: BaseLLM) -> Tuple(str, str):
+def get_explanation(exercise_dict: Dict, _llm: BaseLLM) -> Tuple[str, str]:
     explanation_prompt = create_code_explanation_prompt(generated_question=exercise_dict['problem_statement'],
                                                             code=exercise_dict['solution'])
     explanation_llm_chain = get_llm_chain(_llm, explanation_prompt, None, tag=os.getenv('ENV_TAG', 'test-run'))
@@ -72,7 +72,9 @@ def get_explanation(exercise_dict: Dict, _llm: BaseLLM) -> Tuple(str, str):
 st.title("🤖 PyEx")
 st.info("AI-powered exercise generation that accelerates your programming journey! 🚀")
 
-st.sidebar.image("https://imgur.com/a/zAsDXCj", use_column_width=True)
+st.sidebar.image(image=f"{os.getcwd()}/logo.png",
+                 use_column_width=True,
+                 width=20)
 st.sidebar.header("Programming Exercise Generator")
 
 language = st.sidebar.selectbox(label="Programming Language",
