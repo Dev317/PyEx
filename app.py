@@ -29,7 +29,7 @@ def get_exercise(language: str,
                  _exercise_llm_chain: LLMChain,
                  _llm: BaseLLM) -> Tuple[Dict, str]:
 
-    exercise_generate_prompt = f"Generate a {language} coding exercise according to above format, under the context of {context}. The problem statement content MUST have the {context} topic."
+    exercise_generate_prompt = f"Generate a {language} coding exercise according to above format. The problem statement content MUST have the {context} keywords."
     exercise_generate_metadata = {
                                     "metadata": {
                                         "type": "exercise_generator"
