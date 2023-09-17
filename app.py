@@ -68,7 +68,7 @@ st.sidebar.image("https://imgur.com/a/zAsDXCj", use_column_width=True)
 st.sidebar.header("Programming Exercise Generator")
 
 language = st.sidebar.selectbox(label="Programming Language",
-                                options=['Python'])
+                                options=['Python']).lower()
 
 difficulty = st.sidebar.selectbox(label="Difficulty",
                                   options=['Easy', 'Medium', 'Hard'])
