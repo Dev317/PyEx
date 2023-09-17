@@ -89,6 +89,7 @@ difficulty = st.sidebar.selectbox(label="Difficulty",
 topic = st.sidebar.selectbox(label="Programming Topic",
                              options=['Array', 'String', 'Math', 'Dyanamic Programming', 'Binary Search'])
 
+context = ""
 # context = st.sidebar.text_input(label="New Question Keyword Context",
 #                                 help="The context under which the question will be formed.",
 #                                 placeholder="Context can be anything, e.g. cars/balloons/trains")
