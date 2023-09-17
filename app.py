@@ -6,6 +6,11 @@ import logging
 from langchain import callbacks
 from streamlit_ace import st_ace
 from similarity_check import *
+from langchain.output_parsers import PydanticOutputParser
+from langchain.chains import LLMChain
+from langchain.llms.base import BaseLLM
+from typing import Tuple, Dict
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -19,7 +24,10 @@ st.set_page_config(page_title="Coding Room",
 
 
 @st.cache_data(ttl=3000, show_spinner="Generating exercise ...")
-def get_exercise(language, _exercise_parser, _exercise_llm_chain, _llm):
+def get_exercise(language: str,
+                 _exercise_parser: PydanticOutputParser,
+                 _exercise_llm_chain: LLMChain,
+                 _llm: BaseLLM) -> Tuple(Dict, str):
 
     exercise_generate_prompt = f"Generate a {language} coding exercise according to above format, under the context of {context}. The problem statement content MUST have the {context} topic."
     exercise_generate_metadata = {
@@ -42,7 +50,7 @@ def get_exercise(language, _exercise_parser, _exercise_llm_chain, _llm):
     return exercise_dict, exercise_chain_run_id
 
 @st.cache_data(ttl=3000, show_spinner="Please hang tight ...")
-def get_explanation(exercise_dict, _llm):
+def get_explanation(exercise_dict: Dict, _llm: BaseLLM) -> Tuple(str, str):
     explanation_prompt = create_code_explanation_prompt(generated_question=exercise_dict['problem_statement'],
                                                             code=exercise_dict['solution'])
     explanation_llm_chain = get_llm_chain(_llm, explanation_prompt, None, tag=os.getenv('ENV_TAG', 'test-run'))
@@ -68,7 +76,7 @@ st.sidebar.image("https://imgur.com/a/zAsDXCj", use_column_width=True)
 st.sidebar.header("Programming Exercise Generator")
 
 language = st.sidebar.selectbox(label="Programming Language",
-                                options=['Python']).lower()
+                                options=['Python'])
 
 difficulty = st.sidebar.selectbox(label="Difficulty",
                                   options=['Easy', 'Medium', 'Hard'])
@@ -120,24 +128,32 @@ if generate_btn or "feedback_state" in st.session_state:
         st.cache_data.clear()
 
     try:
-        dataset_path = generate_sample_question(language=language,
+        dataset_path = generate_sample_question(language=language.lower(),
                                                 difficulty=difficulty,
                                                 topic=topic)
         sample_questions = select_random_n_questions(dataset_path=dataset_path, n=num_ref_exercises)
-        prompt = create_exercise_prompt(language,
+        prompt = create_exercise_prompt(language=language.lower(),
                                         sample_questions=sample_questions,
                                         topic=topic + "," + context)
         exercise_parser = get_parser(Exercise)
-        exercise_llm_chain = get_llm_chain(llm, prompt, exercise_parser, tag=os.getenv('ENV_TAG', 'test-run'))
-        exercise_dict, exercise_chain_run_id = get_exercise(language, exercise_parser, exercise_llm_chain, llm)
+        exercise_llm_chain = get_llm_chain(llm=llm,
+                                           prompt=prompt,
+                                           parser=exercise_parser,
+                                           tag=os.getenv('ENV_TAG', 'test-run'))
+        exercise_dict, exercise_chain_run_id = get_exercise(language=language.lower(),
+                                                            _exercise_parser=exercise_parser,
+                                                            _exercise_llm_chain=exercise_llm_chain,
+                                                            _llm=llm)
 
         if exercise_dict:
-            explanation_response, explanation_chain_run_id = get_explanation(exercise_dict, llm)
+            explanation_response, explanation_chain_run_id = get_explanation(exercise_dict=exercise_dict,
+                                                                             _llm=llm)
 
         st.subheader(body="AI-generated Programming Exercise",
                     divider="rainbow")
 
-        with st.expander(exercise_dict['title'], expanded=True):
+        with st.expander(label=exercise_dict['title'],
+                         expanded=True):
             problem_statement_tab, explanation_tab, feedback_tab = st.tabs(['❓ Problem Statement', '💡 Code Hint Explanation', '❤️ Feedback'])
             with problem_statement_tab:
                 st.markdown(body=exercise_dict['problem_statement'])
@@ -156,7 +172,8 @@ if generate_btn or "feedback_state" in st.session_state:
 
                 try:
                     if st.button(label="Similarity check"):
-                        percentage_sim = similarity_check(exercise_dict['solution'], code_snippet)
+                        percentage_sim = similarity_check(ref_code=exercise_dict['solution'],
+                                                          actual_code=code_snippet)
                         st.info(f"Similarity with hinted solution: {percentage_sim * 100}%")
                 except Exception as ex:
                     st.toast(f"Error: {str(ex)} ", icon="❗")
