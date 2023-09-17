@@ -52,8 +52,11 @@ def get_exercise(language: str,
 @st.cache_data(ttl=3000, show_spinner="Please hang tight ...")
 def get_explanation(exercise_dict: Dict, _llm: BaseLLM) -> Tuple[str, str]:
     explanation_prompt = create_code_explanation_prompt(generated_question=exercise_dict['problem_statement'],
-                                                            code=exercise_dict['solution'])
-    explanation_llm_chain = get_llm_chain(_llm, explanation_prompt, None, tag=os.getenv('ENV_TAG', 'test-run'))
+                                                        code=exercise_dict['solution'])
+    explanation_llm_chain = get_llm_chain(llm=_llm,
+                                          template=explanation_prompt,
+                                          parser=None,
+                                          tag=os.getenv('ENV_TAG', 'test-run'))
     explanation_generate_prompt = f"Generate explanation for the above code"
     explanation_generate_metadata = {
                                         "metadata": {
@@ -133,13 +136,14 @@ if generate_btn or "feedback_state" in st.session_state:
         dataset_path = generate_sample_question(language=language.lower(),
                                                 difficulty=difficulty,
                                                 topic=topic)
-        sample_questions = select_random_n_questions(dataset_path=dataset_path, n=num_ref_exercises)
+        sample_questions = select_random_n_questions(dataset_path=dataset_path,
+                                                     n=num_ref_exercises)
         prompt = create_exercise_prompt(language=language.lower(),
                                         sample_questions=sample_questions,
                                         topic=topic + "," + context)
         exercise_parser = get_parser(Exercise)
         exercise_llm_chain = get_llm_chain(llm=llm,
-                                           prompt=prompt,
+                                           template=prompt,
                                            parser=exercise_parser,
                                            tag=os.getenv('ENV_TAG', 'test-run'))
         exercise_dict, exercise_chain_run_id = get_exercise(language=language.lower(),
