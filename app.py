@@ -29,7 +29,7 @@ def get_exercise(language: str,
                  _exercise_llm_chain: LLMChain,
                  _llm: BaseLLM) -> Tuple[Dict, str]:
 
-    exercise_generate_prompt = f"Generate a {language} coding exercise according to above format. The problem statement content MUST have the {context} keywords."
+    exercise_generate_prompt = f"Generate a {language} coding exercise according to above format. The problem statement content MUST contain the `{context}` keywords."
     exercise_generate_metadata = {
                                     "metadata": {
                                         "type": "exercise_generator"
@@ -89,9 +89,9 @@ difficulty = st.sidebar.selectbox(label="Difficulty",
 topic = st.sidebar.selectbox(label="Programming Topic",
                              options=['Array', 'String', 'Math', 'Dyanamic Programming', 'Binary Search'])
 
-context = st.sidebar.text_input(label="New Question Keyword Context",
-                                help="The context under which the question will be formed.",
-                                placeholder="Context can be anything, e.g. cars/balloons/trains")
+# context = st.sidebar.text_input(label="New Question Keyword Context",
+#                                 help="The context under which the question will be formed.",
+#                                 placeholder="Context can be anything, e.g. cars/balloons/trains")
 
 num_ref_exercises = st.sidebar.slider(label="No. Reference Exercises",
                                       help="Number of similar topic exercises that you can refer to",
@@ -102,7 +102,7 @@ num_ref_exercises = st.sidebar.slider(label="No. Reference Exercises",
 
 temperature = st.sidebar.slider(label="LLM temperature",
                                 help="Lower temperature yields focused and deterministic responses, while higher temperature introduces more randomness and diversity in responses",
-                                min_value=0.7,
+                                min_value=0.5,
                                 max_value=0.99,
                                 value=0.8,
                                 step=0.01)
@@ -140,7 +140,7 @@ if generate_btn or "feedback_state" in st.session_state:
                                                      n=num_ref_exercises)
         prompt = create_exercise_prompt(language=language.lower(),
                                         sample_questions=sample_questions,
-                                        topic=topic + "," + context)
+                                        topic=topic + "\n" + context)
         exercise_parser = get_parser(Exercise)
         exercise_llm_chain = get_llm_chain(llm=llm,
                                            template=prompt,

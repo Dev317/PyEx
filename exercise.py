@@ -1,6 +1,7 @@
 import os
 from langchain.llms.llamacpp import LlamaCpp
 from langchain.chat_models import ChatOpenAI
+from langchain.llms import OpenAI
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 from langchain.output_parsers import PydanticOutputParser, RetryWithErrorOutputParser
@@ -91,6 +92,7 @@ def get_llm_chain(llm,
     return llm_chain
 
 def parse_response(response, parser, llm, prompt_value):
+    response = response.replace("`", "")
     while True:
         try:
             generated_exercise = json.loads(response)
