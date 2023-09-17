@@ -64,10 +64,11 @@ def get_explanation(exercise_dict, _llm):
 st.title("🤖 PyEx")
 st.info("AI-powered exercise generation that accelerates your programming journey! 🚀")
 
+st.sidebar.image("https://imgur.com/a/zAsDXCj", use_column_width=True)
 st.sidebar.header("Programming Exercise Generator")
 
 language = st.sidebar.selectbox(label="Programming Language",
-                                options=['python'])
+                                options=['Python']).lower()
 
 difficulty = st.sidebar.selectbox(label="Difficulty",
                                   options=['Easy', 'Medium', 'Hard'])
@@ -80,17 +81,18 @@ context = st.sidebar.text_input(label="New Question Keyword Context",
                                 placeholder="Context can be anything, e.g. cars/balloons/trains")
 
 num_ref_exercises = st.sidebar.slider(label="No. Reference Exercises",
-                                      help="Number of similar topic exercises to refer to",
+                                      help="Number of similar topic exercises that you can refer to",
                                       min_value=2,
                                       max_value=5,
                                       value=3,
                                       step=1)
 
 temperature = st.sidebar.slider(label="LLM temperature",
-                               min_value=0.7,
-                               max_value=0.99,
-                               value=0.8,
-                               step=0.01)
+                                help="Lower temperature yields focused and deterministic responses, while higher temperature introduces more randomness and diversity in responses",
+                                min_value=0.7,
+                                max_value=0.99,
+                                value=0.8,
+                                step=0.01)
 
 gpt_model = st.sidebar.selectbox(label="GPT model",
                                  options=['gpt-3.5-turbo', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo-0613', 'gpt-3.5-turbo-16k-0613'])
